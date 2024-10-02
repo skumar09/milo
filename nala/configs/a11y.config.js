@@ -3,10 +3,14 @@
 const { devices } = require('@playwright/test');
 const path = require('path');
 
+console.log('Global Setup Path:', path.resolve(__dirname, './utils/global.setup.js'));
+console.log('Test Directory Path:', path.resolve(__dirname, '../nala'));
+
+
 const config = {
   testDir: path.resolve(__dirname, '../nala'),
   outputDir: path.resolve(__dirname, '../test-results'),
-  globalSetup: path.resolve(__dirname, '../nala/utils/global.setup.js'),
+  globalSetup: path.resolve(__dirname, '../utils/global.setup.js'),
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
