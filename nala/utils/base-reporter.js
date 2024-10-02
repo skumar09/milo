@@ -97,11 +97,29 @@ class BaseReporter {
     const resultSummary = { summary };
 
     const resultPath = this.getA11yResultPath();
+    const fullResultPath = path.resolve(resultPath);
 
     console.log('onEnd / Result Path', resultPath);
 
-    if (!fs.existsSync(resultPath)) {
-      fs.mkdir(resultPath, { recursive: true });
+    console.log('Current working directory:', process.cwd());
+    console.log('Full result path:', path.resolve(resultPath));  // Ensure the path is fully resolved
+
+
+    try {
+      const dirExists = await fs.stat(fullResultPath)
+        .then(() => true)
+        .catch(() => false);
+  
+      if (!dirExists) {
+        console.log('Directory does not exist. Creating:', fullResultPath);
+        await fs.mkdir(fullResultPath, { recursive: true });
+        console.log('Directory created successfully:', fullResultPath);
+      } else {
+        console.log('Directory already exists:', fullResultPath);
+      }
+    } catch (error) {
+      console.error('Error creating or checking directory:', error.message);
+      return;
     }
 
     console.log('onEnd / existsSync');
