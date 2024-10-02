@@ -31,7 +31,7 @@ jobs:
 
       - name: Debug URLs
         run: |
-        echo "Final URLs: ${{ env.INPUT_URLS }}"
+          echo "Final URLs: ${{ env.INPUT_URLS }}"
 
       - name: Set execute permission for a11y.run.sh
         run: chmod +x ./nala/utils/a11y.run.sh
