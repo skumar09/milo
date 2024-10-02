@@ -54,7 +54,7 @@ jobs:
             echo "Report directory exist."
             ls -la nala-report-a11y/manual-reports
           else
-          ls -la nala-report-a11
+            ls -la nala-report-a11
             echo "Report directory does NOT exist"
           fi
 
