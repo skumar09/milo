@@ -130,6 +130,7 @@ class BaseReporter {
     if (this.globalAccessibilityResults.length > 0) {
       console.log(`Found total ${this.globalAccessibilityResults.length} Accessibility rules voilation in this test run`);
       await generateA11yReport(this.globalAccessibilityResults, resultPath);
+      console.log(`Accessibility report saved at: ${resultPath}`);
     } else {
       console.info('No Accessibility test violations to report.');
     }

@@ -47,6 +47,16 @@ jobs:
           ref: nala-a11y-results
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if report directory exists and list contents
+        run: |
+          echo "current working directory: {pwd}"
+          if [ -d "nala-report-a11y/manual-reports" ]; then
+            echo "Report directory exist."
+            ls -la nala-report-a11y/manual-reports
+          else
+            echo "Report directory does NOT exist"
+          fi
+
       - name: Copy the generated accessibility report
         run: |
           mkdir -p reports
