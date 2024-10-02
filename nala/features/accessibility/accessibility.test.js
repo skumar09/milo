@@ -10,7 +10,7 @@ const urls = inputUrls.split(/[\s,]+/).map((url) => url.trim()).filter((url) => 
 test.describe('Nala Accessibility Test Suite', () => {
   // Check if URLs are provided
   if (urls.length === 0) {
-    test('No URLs provided', async () => {
+    test('No URLs @ provided', async () => {
       console.error('No valid URLs were provided for testing.');
       throw new Error('No valid URLs found');
     });
@@ -18,7 +18,7 @@ test.describe('Nala Accessibility Test Suite', () => {
 
   // Loop through the provided URLs and run accessibility tests
   urls.forEach((url, index) => {
-    test(`[Test ${index + 1}] Accessibility Test on: ${url}`, async ({ page }) => {
+    test(`[Test ${index + 1}] Accessibility Test on @  ${url}`, async ({ page }) => {
       console.info(`[Test Page]: ${url}`);
 
       // Error handling for invalid URLs or navigation failures
