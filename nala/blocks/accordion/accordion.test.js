@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import WebUtil from '../../libs/webutil.js';
 import { features } from './accordion.spec.js';
 import AccordionBlock from './accordion.page.js';
+import { runAccessibilityTest } from '../../libs/accessibility.js';
 
 let webUtil;
 let accordion;
@@ -15,7 +16,7 @@ test.describe('Milo Accordion Block test suite', () => {
   });
 
   // Test 0 : Accordion Container
-  test(`${features[0].name},${features[0].tags}`, async ({ page, baseURL }) => {
+  test(`[Test Id - ${features[0].tcid} ${features[0].name}],${features[0].tags}`, async ({ page, baseURL }) => {
     console.info(`[Test Page]: ${baseURL}${features[0].path}${miloLibs}`);
     const { data } = features[0];
 
@@ -50,10 +51,14 @@ test.describe('Milo Accordion Block test suite', () => {
       await expect(await accordion.section).toHaveAttribute('daa-lh', await webUtil.getSectionDaalh(1));
       await expect(await accordion.accordion).toHaveAttribute('daa-lh', await webUtil.getBlockDaalh('accordion-container', 1));
     });
+
+    await test.step('step-4: Run accessibility test on accordion block', async () => {
+      await runAccessibilityTest(page, accordion.accordion);
+    });
   });
 
   // Test 1 : Accordion (seo)
-  test(`${features[1].name},${features[1].tags}`, async ({ page, baseURL }) => {
+  test(`[Test Id - ${features[5].tcid} ${features[1].name}],${features[1].tags}`, async ({ page, baseURL }) => {
     console.info(`[Test Page]: ${baseURL}${features[1].path}${miloLibs}`);
 
     await test.step('step-1: Go to Accordion block test page', async () => {
@@ -64,7 +69,6 @@ test.describe('Milo Accordion Block test suite', () => {
 
     await test.step('step-2: Verify Accrodion seo block specs', async () => {
       await expect(await accordion.accordion).toBeVisible();
-
       const scriptContent = await page.evaluate(() => {
         const scriptElement = document.querySelector('script[type="application/ld+json"]');
         return scriptElement ? scriptElement.textContent : null;
@@ -78,10 +82,14 @@ test.describe('Milo Accordion Block test suite', () => {
     await test.step('step-3: Verify analytics attributes', async () => {
       await expect(await accordion.accordion).toHaveAttribute('daa-lh', await webUtil.getBlockDaalh('accordion-container', 1));
     });
+
+    await test.step('step-4: Run accessibility test on accordion block', async () => {
+      await runAccessibilityTest(page, accordion.accordion);
+    });
   });
 
   // Test 2 : Accordion (quiet, max-width-12-desktop-large)
-  test(`${features[2].name},${features[2].tags}`, async ({ page, baseURL }) => {
+  test(`[Test Id - ${features[2].tcid} ${features[2].name}],${features[2].tags}`, async ({ page, baseURL }) => {
     console.info(`[Test Page]: ${baseURL}${features[2].path}${miloLibs}`);
     const { data } = features[2];
 
@@ -110,10 +118,14 @@ test.describe('Milo Accordion Block test suite', () => {
     await test.step('step-3: Verify analytics attributes', async () => {
       await expect(await accordion.accordion).toHaveAttribute('daa-lh', await webUtil.getBlockDaalh('accordion-container', 1));
     });
+
+    await test.step('step-4: run accessibility test for accordion block', async () => {
+      await runAccessibilityTest(page, accordion.accordion);
+    });
   });
 
   // Test 3 : Accordion seo editorial
-  test(`${features[3].name},${features[3].tags}`, async ({ page, baseURL }) => {
+  test(`[Test Id - ${features[3].tcid} ${features[3].name}],${features[3].tags}`, async ({ page, baseURL }) => {
     console.info(`[Test Page]: ${baseURL}${features[3].path}${miloLibs}`);
     const { data } = features[3];
 
@@ -131,6 +143,41 @@ test.describe('Milo Accordion Block test suite', () => {
 
       await expect(await accordion.outlineButton).toContainText(data.outlineButtonText);
       await expect(await accordion.blueButton).toContainText(data.blueButtonText);
+    });
+
+    await test.step('step-3: run accessibility test for accordion block', async () => {
+      await runAccessibilityTest(page, accordion.accordion);
+    });
+  });
+
+  // Test 4 : Accessibility Test
+  test(`[Test Id - ${features[4].tcid} ${features[4].name}],${features[4].tags}`, async ({ page, baseURL }) => {
+    console.info(`[Test Page]: ${baseURL}${features[4].path}${miloLibs}`);
+
+    await test.step('step-1: Go to accordion test page', async () => {
+      await page.goto(`${baseURL}${features[4].path}${miloLibs}`);
+      await page.waitForLoadState('domcontentloaded');
+      await expect(page).toHaveURL(`${baseURL}${features[4].path}${miloLibs}`);
+    });
+
+    await test.step('step-2: run accessibility test for accordion block', async () => {
+      await runAccessibilityTest(page, accordion.accordion);
+    });
+  });
+
+  // Test 5 : Accessibility Test on a page
+  features[5].path.forEach((url) => {
+    test(`[Test Id - ${features[5].tcid} ${features[5].name}: ${url}],${features[5].tags}`, async ({ page }) => {
+      console.info(`[Test Page]: ${url}`);
+
+      await test.step('step-1: Go to a11y test page', async () => {
+        await page.goto(`${url}${miloLibs}`);
+        await page.waitForLoadState('domcontentloaded');
+        await expect(page).toHaveURL(`${url}${miloLibs}`);
+      });
+      await test.step('step-2: run accessibility test on page', async () => {
+        await runAccessibilityTest(page);
+      });
     });
   });
 });

@@ -1,5 +1,7 @@
 /* eslint-disable max-len, class-methods-use-this, no-empty-function, no-console */
+import generateA11yReport from './a11y-report.js';
 
+const fs = require('fs');
 const { sendSlackMessage } = require('./slack.js');
 
 // Playwright will include ANSI color characters and regex from below
@@ -21,6 +23,8 @@ function stripAnsi(str) {
   return str.replace(ansiRegex, '');
 }
 
+// const accessibilityResults = [];
+
 class BaseReporter {
   constructor(options) {
     this.options = options;
@@ -33,6 +37,7 @@ class BaseReporter {
   onBegin(config, suite) {
     this.config = config;
     this.rootSuite = suite;
+    this.globalAccessibilityResults = [];
   }
 
   async onTestEnd(test, result) {
@@ -46,6 +51,16 @@ class BaseReporter {
       error: { message: errorMessage, value: errorValue, stack: errorStack } = {},
       retry,
     } = result;
+
+    const attachments = result.attachments.filter((att) => att.name === 'Accessibility Test Results');
+
+    if (attachments.length > 0) {
+      const attachment = attachments[0]; // Assuming there's only one attachment per test
+      const attachedData = JSON.parse(attachment.body.toString('utf-8'));
+
+      // Push to your results array
+      this.globalAccessibilityResults.push(attachedData);
+    }
 
     if (retry < retries && status === 'failed') {
       return;
@@ -80,6 +95,20 @@ class BaseReporter {
   async onEnd() {
     const summary = this.printResultSummary();
     const resultSummary = { summary };
+
+    const resultPath = this.getA11yResultPath();
+
+    // if result path doesn't exist then create it
+    if (!fs.existsSync(resultPath)) {
+      fs.mkdir(resultPath, { recursive: true });
+    }
+
+    if (this.globalAccessibilityResults.length > 0) {
+      console.log(`Found total ${this.globalAccessibilityResults.length} Accessibility rules voilation in this test run`);
+      await generateA11yReport(this.globalAccessibilityResults, resultPath);
+    } else {
+      console.info('No Accessibility test violations to report.');
+    }
 
     if (process.env.SLACK_WH) {
       try {
@@ -137,9 +166,9 @@ class BaseReporter {
         .filter((result) => result.status === 'failed')
         .forEach((failedTest) => {
           console.log(`Test: ${failedTest.title.split('@')[1]}`);
-          console.log(`Error Message: ${failedTest.errorMessage}`);
+          // console.log(`Error Message: ${failedTest.errorMessage}`);
           console.log(`Error Stack: ${failedTest.errorStack}`);
-          console.log('-------------------------');
+          console.log('--------------------------------------------\n');
         });
     }
     return summary;
@@ -218,6 +247,21 @@ class BaseReporter {
       results: this.results,
       timestamp: currTime,
     };
+  }
+
+  // helper function to determine a11y report location.
+  getA11yResultPath() {
+    const isGitHubAction = process.env.GITHUB_ACTIONS === 'true';
+    const isPullRequest = process.env.GITHUB_REF && process.env.GITHUB_REF.includes('pull');
+
+    if (isGitHubAction) {
+      if (isPullRequest) {
+        return './nala-report-a11y/pr-reports';
+      }
+      return './nala-report-a11y/manual-reports';
+    }
+    // local run
+    return './test-results';
   }
 }
 export default BaseReporter;
