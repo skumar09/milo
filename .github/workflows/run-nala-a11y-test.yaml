@@ -30,7 +30,8 @@ jobs:
           echo "INPUT_URLS=https://www.adobe.com/acrobat/personal-document-management.html" >> $GITHUB_ENV
 
       - name: Debug URLs
-        run: echo "Final URLs: ${{ env.INPUT_URLS }}"
+        run: |
+        echo "Final URLs: ${{ env.INPUT_URLS }}"
 
       - name: Set execute permission for a11y.run.sh
         run: chmod +x ./nala/utils/a11y.run.sh
