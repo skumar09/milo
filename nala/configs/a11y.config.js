@@ -32,6 +32,8 @@ const config = {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 60000,
 
+    baseURL: 'https://stage--milo--adobecom.hlx.live',
+
     trace: 'on-first-retry',
   },
 
