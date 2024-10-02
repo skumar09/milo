@@ -49,7 +49,7 @@ jobs:
 
       - name: Check if report directory exists and list contents
         run: |
-          echo "current working directory: ${pwd}"
+          echo "current working directory: $(pwd)"
           if [ -d "nala-report-a11y/manual-reports" ]; then
             echo "Report directory exist."
             ls -la nala-report-a11y/manual-reports
