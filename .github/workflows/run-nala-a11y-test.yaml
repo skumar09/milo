@@ -1,12 +1,15 @@
 name: Nala Accessibility Tests
 
 on:
-  workflow_dispatch:  # Workflow to be triggered manually
+  push:
+    branches:
+      - nala-a11y   
+  workflow_dispatch:
     inputs:
       urls:
         description: 'Comma-separated list of URLs to run accessibility tests on'
         required: false
-        default: ''
+        default: 'https://www.adobe.com/acrobat/personal-document-management.html'
       urls_file:
         description: 'File containing URLs (one URL per line) to run accessibility tests on'
         required: false
