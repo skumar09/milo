@@ -21,7 +21,7 @@ npm ci
 npx playwright install --with-deps
 
 # Run Playwright tests specifically for accessibility using a custom config
-npx playwright test --config=.nala/configs/a11y.config.js || EXIT_STATUS=$?
+npx playwright test --config=nala/configs/a11y.config.js || EXIT_STATUS=$?
 
 # Check if tests passed or failed
 if [ $EXIT_STATUS -ne 0 ]; then
