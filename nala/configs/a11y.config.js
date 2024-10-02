@@ -1,16 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 const { devices } = require('@playwright/test');
-const path = require('path');
-
-console.log('Global Setup Path:', path.resolve(__dirname, './utils/global.setup.js'));
-console.log('Test Directory Path:', path.resolve(__dirname, '../nala'));
-
 
 const config = {
-  testDir: '../nala',
-  outputDir: '../test-results',
-  globalSetup: path.resolve(__dirname, '../utils/global.setup.js'),
+  testDir: '../../nala',
+  outputDir: '../../test-results',
+  globalSetup: '../utils/global.setup.js',
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
