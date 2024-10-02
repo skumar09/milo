@@ -5,7 +5,7 @@ const { devices } = require('@playwright/test');
 const config = {
   testDir: '../nala',
   outputDir: '../test-results',
-  globalSetup: '../nala/utils/global.setup.js',
+  globalSetup: './utils/global.setup.js',
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
