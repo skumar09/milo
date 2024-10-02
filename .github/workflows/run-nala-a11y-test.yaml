@@ -10,11 +10,10 @@ on:
       urls_file:
         description: 'File containing URLs (one URL per line) to run accessibility tests on'
         required: false
-  push:
-    branches:
-      - main
-      - stage
-      - nala-a11y
+      branch:
+        description: 'Branch to run the workflow on'
+        required: true
+        default: 'nala-a11y'
 
 jobs:
   run-accessibility-tests:
