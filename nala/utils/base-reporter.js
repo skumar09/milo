@@ -97,10 +97,11 @@ class BaseReporter {
     const resultSummary = { summary };
 
     const resultPath = this.getA11yResultPath();
-    const fullResultPath = path.resolve(resultPath);
-
     console.log('onEnd / Result Path', resultPath);
 
+    const fullResultPath = path.resolve(resultPath);
+    
+    console.log('onEnd / Result Path', resultPath);
     console.log('Current working directory:', process.cwd());
     console.log('Full result path:', path.resolve(resultPath));  // Ensure the path is fully resolved
 
