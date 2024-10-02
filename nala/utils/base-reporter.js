@@ -208,10 +208,12 @@ class BaseReporter {
     if (url.includes('localhost')) {
       branch = 'local';
       repo = 'local';
-    } else {
+    } else if (url && url !== 'unknown') {
       const urlParts = url.split('/');
       const branchAndRepo = urlParts[urlParts.length - 1];
       [branch, repo] = branchAndRepo.split('--');
+    } else {
+      console.warn('No valid URL found, setting branch and repo to default values.');
     }
 
     return {
