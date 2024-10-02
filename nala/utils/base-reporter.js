@@ -98,10 +98,13 @@ class BaseReporter {
 
     const resultPath = this.getA11yResultPath();
 
-    // if result path doesn't exist then create it
+    console.log('onEnd / Result Path', resultPath);
+
     if (!fs.existsSync(resultPath)) {
       fs.mkdir(resultPath, { recursive: true });
     }
+
+    console.log('onEnd / existsSync');
 
     if (this.globalAccessibilityResults.length > 0) {
       console.log(`Found total ${this.globalAccessibilityResults.length} Accessibility rules voilation in this test run`);
