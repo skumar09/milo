@@ -14,7 +14,7 @@ fi
 
 # Log the Playwright command that will run
 echo "Running Accessibility Tests on URLs: $URLS"
-echo "Run Command: npx playwright test --config=.nala/configs/a11y.config.js"
+echo "Run Command: npx playwright test --config=nala/configs/a11y.config.js"
 
 # Install dependencies
 npm ci
