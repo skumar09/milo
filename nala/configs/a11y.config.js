@@ -10,7 +10,7 @@ console.log('Test Directory Path:', path.resolve(__dirname, '../nala'));
 const config = {
   testDir: path.resolve(__dirname, '../nala'),
   outputDir: path.resolve(__dirname, '../test-results'),
-  globalSetup: path.resolve(__dirname, '../utils/global.setup.js'),
+  globalSetup: path.resolve(__dirname, './utils/global.setup.js'),
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
@@ -31,8 +31,8 @@ const config = {
   workers: process.env.CI ? 4 : 3,
   /* Reporter to use. */
   reporter: process.env.CI
-    ? [['github'], ['list'], ['./nala/utils/base-reporter.js']]
-    : [['html', { outputFolder: 'test-html-results' }], ['list'], ['./nala/utils/base-reporter.js']],
+    ? [['github'], ['list'], ['./utils/base-reporter.js']]
+    : [['html', { outputFolder: 'test-html-results' }], ['list'], ['./utils/base-reporter.js']],
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 60000,
