@@ -3,20 +3,7 @@ name: Nala Accessibility Tests
 on:
   push:
     branches:
-      - nala-a11y   
-  workflow_dispatch:
-    inputs:
-      urls:
-        description: 'Comma-separated list of URLs to run accessibility tests on'
-        required: false
-        default: 'https://www.adobe.com/acrobat/personal-document-management.html'
-      urls_file:
-        description: 'File containing URLs (one URL per line) to run accessibility tests on'
-        required: false
-      branch:
-        description: 'Branch to run the workflow on'
-        required: true
-        default: 'nala-a11y'
+      - nala-a11y  # Only runs on push events to this branch
 
 jobs:
   run-accessibility-tests:
@@ -38,18 +25,12 @@ jobs:
 
       - name: Prepare URLs
         run: |
-          # Check if URLs input was provided
-          if [ "${{ github.event.inputs.urls }}" != "" ]; then
-            echo "Using manually provided URLs: ${{ github.event.inputs.urls }}"
-            echo "INPUT_URLS=${{ github.event.inputs.urls }}" >> $GITHUB_ENV
-          fi
+          # For push events, we use a default URL
+          echo "Triggered by a push event. Using default URL."
+          echo "INPUT_URLS=https://www.adobe.com/acrobat/personal-document-management.html" >> $GITHUB_ENV
 
-          # Check if URLs file was provided
-          if [ "${{ github.event.inputs.urls_file }}" != "" ]; then
-            echo "Using URLs from the file: ${{ github.event.inputs.urls_file }}"
-            cat "${{ github.event.inputs.urls_file }}" > urls_from_file.txt
-            echo "INPUT_URLS=$(cat urls_from_file.txt | tr '\n' ',' | sed 's/,$//')" >> $GITHUB_ENV
-          fi
+      - name: Debug URLs
+        run: echo "Final URLs: ${{ env.INPUT_URLS }}"
 
       - name: Set execute permission for a11y.run.sh
         run: chmod +x ./nala/utils/a11y.run.sh
@@ -67,11 +48,7 @@ jobs:
       - name: Copy the generated accessibility report
         run: |
           mkdir -p reports
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            cp -r nala-report-a11y/pr-reports/* reports/
-          else
-            cp -r nala-report-a11y/manual-reports/* reports/
-          fi
+          cp -r nala-report-a11y/manual-reports/* reports/
 
       - name: Commit and push the accessibility report to nala-a11y-results branch
         run: |
