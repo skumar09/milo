@@ -4,7 +4,6 @@ import generateA11yReport from './a11y-report.js';
 const fs = require('fs').promises;
 const path = require('path');
 
-const fs = require('fs');
 const { sendSlackMessage } = require('./slack.js');
 
 // Playwright will include ANSI color characters and regex from below
