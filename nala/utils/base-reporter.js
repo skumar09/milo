@@ -1,6 +1,9 @@
 /* eslint-disable max-len, class-methods-use-this, no-empty-function, no-console */
 import generateA11yReport from './a11y-report.js';
 
+const fs = require('fs').promises;
+const path = require('path');
+
 const fs = require('fs');
 const { sendSlackMessage } = require('./slack.js');
 
@@ -100,7 +103,7 @@ class BaseReporter {
     console.log('onEnd / Result Path', resultPath);
 
     const fullResultPath = path.resolve(resultPath);
-    
+
     console.log('onEnd / Result Path', resultPath);
     console.log('Current working directory:', process.cwd());
     console.log('Full result path:', path.resolve(resultPath));  // Ensure the path is fully resolved
