@@ -8,6 +8,7 @@ export default async function generateA11yReport(report, outputDir) {
   const reportName = `nala-a11y-report-${time.toISOString().replace(/[:.]/g, '-')}.html`;
   const reportPath = path.resolve(outputDir, reportName);
 
+  console.log('A11Y-REPORT / reportPath: ', reportPath);
   // Check if the report contains violations
   if (!report || report.length === 0) {
     console.error('No accessibility violations to report.');

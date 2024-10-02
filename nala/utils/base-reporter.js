@@ -257,9 +257,11 @@ class BaseReporter {
     const isPullRequest = process.env.GITHUB_REF && process.env.GITHUB_REF.includes('pull');
 
     if (isGitHubAction) {
+      console.log('Getting the result path:');
       if (isPullRequest) {
         return './nala-report-a11y/pr-reports';
       }
+      console.log('Manual the result path:./nala-report-a11y/manual-reports');
       return './nala-report-a11y/manual-reports';
     }
     // local run
