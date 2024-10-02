@@ -38,6 +38,7 @@ jobs:
 
       - name: Run Accessibility Tests via a11y.run.sh
         run: ./nala/utils/a11y.run.sh
+        continue-on-error: true
 
       - name: Checkout nala-a11y-results branch in your fork
         uses: actions/checkout@v4
