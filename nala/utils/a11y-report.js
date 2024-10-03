@@ -42,9 +42,10 @@ export default async function generateA11yReport(report, outputDir) {
   : 'Local Run';
 
 
-  const reportDir = path.dirname(reportPath);
-  const relativeCSSPath = path.relative(reportDir, '../milo/nala/utils/a11y.css');
-  const relativeJSPath = path.relative(reportDir, '../milo/nala/utils/a11y.js');  
+  const currentWorkingDir = process.cwd();
+  const relativeCSSPath = path.join(currentWorkingDir, 'milo/nala/utils/a11y.css');
+  const relativeJSPath = path.join(currentWorkingDir, 'milo/nala/utils/a11y.js');
+
 
   let htmlContent = `
   <html>
