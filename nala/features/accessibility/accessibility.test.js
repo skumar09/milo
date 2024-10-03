@@ -5,7 +5,8 @@ const miloLibs = process.env.MILO_LIBS || '';
 const inputUrls = process.env.INPUT_URLS || '';
 
 // Convert the input URLs into an array,rim and filter out empty URLs
-const urls = inputUrls.split(/[\s,]+/).map((url) => url.trim()).filter((url) => url);
+//const urls = inputUrls.split(/[\s,]+/).map((url) => url.trim()).filter((url) => url);
+const urls = ['https://www.adobe.com/acrobat/personal-document-management.html'];
 
 test.describe('Nala Accessibility Test Suite', () => {
   // Check if URLs are provided

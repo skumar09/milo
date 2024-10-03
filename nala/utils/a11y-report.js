@@ -43,8 +43,12 @@ export default async function generateA11yReport(report, outputDir) {
 
 
   const currentWorkingDir = process.cwd();
-  const relativeCSSPath = path.join(currentWorkingDir, 'milo/nala/utils/a11y.css');
-  const relativeJSPath = path.join(currentWorkingDir, 'milo/nala/utils/a11y.js');
+  const relativeCSSPath = path.join(currentWorkingDir, '/nala/utils/a11y.css');
+  const relativeJSPath = path.join(currentWorkingDir, '/nala/utils/a11y.js');
+
+  console.log('current working directory : ', currentWorkingDir);
+  console.log('relativeCSSPath : ', relativeCSSPath);
+  console.log('relativeJSPath: ', relativeJSPath);
 
 
   let htmlContent = `
