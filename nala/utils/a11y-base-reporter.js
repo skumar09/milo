@@ -7,9 +7,6 @@ const path = require('path');
 const { sendSlackMessage } = require('./slack.js');
 
 // Playwright will include ANSI color characters and regex from below
-// https://github.com/microsoft/playwright/issues/13522
-// https://github.com/chalk/ansi-regex/blob/main/index.js#L3
-
 const pattern = [
   '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
   '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))',
@@ -43,15 +40,14 @@ class BaseReporter {
   async onTestEnd(test, result) {
     const { title, retries, _projectId } = test;
     const {
-      name, tags, url, browser, env, branch, repo,
-    } = this.parseTestTitle(title, _projectId);
-    const {
       status,
       duration,
       error: { message: errorMessage, value: errorValue, stack: errorStack } = {},
       retry,
     } = result;
 
+    // check for accessibility results violations and add them to 
+    // globalAccessibilityResult array
     const attachments = result.attachments.filter((att) => att.name === 'Accessibility Test Results');
     
     if (attachments.length > 0) {
@@ -63,15 +59,9 @@ class BaseReporter {
     if (retry < retries && status === 'failed') {
       return;
     }
+
     this.results.push({
       title,
-      name,
-      tags,
-      url,
-      env,
-      browser,
-      branch,
-      repo,
       status: failedStatus.includes(status) ? 'failed' : status,
       errorMessage: stripAnsi(errorMessage),
       errorValue,
@@ -94,39 +84,11 @@ class BaseReporter {
     const summary = this.printResultSummary();
     const resultSummary = { summary };
 
-    const resultPath = this.getA11yResultPath();
-    console.log('onEnd / Result Path', resultPath);
-
-    const fullResultPath = path.resolve(resultPath);
-
-    console.log('onEnd / Result Path', resultPath);
-    console.log('Current working directory:', process.cwd());
-    console.log('Full result path:', path.resolve(resultPath));  // Ensure the path is fully resolved
-
-
-    try {
-      const dirExists = await fs.stat(fullResultPath)
-        .then(() => true)
-        .catch(() => false);
-  
-      if (!dirExists) {
-        console.log('Directory does not exist. Creating:', fullResultPath);
-        await fs.mkdir(fullResultPath, { recursive: true });
-        console.log('Directory created successfully:', fullResultPath);
-      } else {
-        console.log('Directory already exists:', fullResultPath);
-      }
-    } catch (error) {
-      console.error('Error creating or checking directory:', error.message);
-      return;
-    }
-
-    console.log('onEnd / existsSync');
+    const resultPath = './test-results'
 
     if (this.globalAccessibilityResults.length > 0) {
-      console.log(`Found total ${this.globalAccessibilityResults.length} Accessibility rules voilation in this test run`);
+      console.log(`Found total ${this.globalAccessibilityResults.length} Accessibility rules voilation for the run`);
       await generateA11yReport(this.globalAccessibilityResults, resultPath);
-      console.log(`Accessibility report saved at: ${resultPath}`);
     } else {
       console.info('No Accessibility test violations to report.');
     }
@@ -195,98 +157,6 @@ class BaseReporter {
     return summary;
   }
 
-  /**
-  This method takes test title and projectId strings and then processes it .
-  @param {string, string} str - The input string to be processed
-  @returns {'name', 'tags', 'url', 'browser', 'env', 'branch' and 'repo'}
-  */
-  parseTestTitle(title, projectId) {
-    let env = 'live';
-    let browser = 'chrome';
-    let branch;
-    let repo;
-    let url;
-
-    const titleParts = title.split('@');
-    const name = titleParts[1].trim();
-    const tags = titleParts.slice(2).map((tag) => tag.trim());
-
-    const projectConfig = this.config.projects.find((project) => project.name === projectId);
-
-    // Get baseURL from project config
-    if (projectConfig?.use?.baseURL) {
-      ({ baseURL: url, defaultBrowserType: browser } = projectConfig.use);
-    } else if (this.config.baseURL) {
-      url = this.config.baseURL;
-    }
-    // Get environment from baseURL
-    if (url.includes('prod')) {
-      env = 'prod';
-    } else if (url.includes('stage')) {
-      env = 'stage';
-    }
-    // Get branch and repo from baseURL
-    if (url.includes('localhost')) {
-      branch = 'local';
-      repo = 'local';
-    } else if (url && url !== 'unknown') {
-      const urlParts = url.split('/');
-      const branchAndRepo = urlParts[urlParts.length - 1];
-      [branch, repo] = branchAndRepo.split('--');
-    } else {
-      console.warn('No valid URL found, setting branch and repo to default values.');
-    }
-
-    return {
-      name, tags, url, browser, env, branch, repo,
-    };
-  }
-
-  async persistData() {}
-
-  printPersistingOption() {
-    if (this.options?.persist) {
-      console.log(
-        `Persisting results using ${this.options.persist?.type} to ${this.options.persist?.path}`,
-      );
-    } else {
-      console.log('Not persisting data');
-    }
-    this.branch = process.env.LOCAL_TEST_LIVE_URL;
-  }
-
-  getPersistedDataObject() {
-    const gitBranch = process.env.GITHUB_REF_NAME ?? 'local';
-
-    // strip out git owner since it can usually be too long to show on the ui
-    const [, gitRepo] = /[A-Za-z0-9_.-]+\/([A-Za-z0-9_.-]+)/.exec(
-      process.env.GITHUB_REPOSITORY,
-    ) ?? [null, 'local'];
-
-    const currTime = new Date();
-    return {
-      gitBranch,
-      gitRepo,
-      results: this.results,
-      timestamp: currTime,
-    };
-  }
-
-  // helper function to determine a11y report location.
-  getA11yResultPath() {
-    const isGitHubAction = process.env.GITHUB_ACTIONS === 'true';
-    const isPullRequest = process.env.GITHUB_REF && process.env.GITHUB_REF.includes('pull');
-
-    if (isGitHubAction) {
-      console.log('Getting the result path:');
-      if (isPullRequest) {
-        return './nala-report-a11y/pr-reports';
-      }
-      console.log('Manual the result path:./nala-report-a11y/manual-reports');
-      return './nala-report-a11y/manual-reports';
-    }
-    // local run
-    return './test-results';
-  }
 }
+
 export default BaseReporter;

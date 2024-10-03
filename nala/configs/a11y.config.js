@@ -15,7 +15,7 @@ const config = {
      */
     timeout: 5000,
   },
-  testMatch: '**/accessibility.test.js',
+  testMatch: '**/*.test.js',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -26,8 +26,8 @@ const config = {
   workers: process.env.CI ? 4 : 3,
   /* Reporter to use. */
   reporter: process.env.CI
-    ? [['github'], ['list'], ['../utils/base-reporter.js']]
-    : [['html', { outputFolder: 'test-html-results' }], ['list'], ['../utils/base-reporter.js']],
+    ? [['github'], ['list'], ['../utils/a11y-base-reporter.js']]
+    : [['html', { outputFolder: 'test-html-results' }], ['list'], ['../utils/a11y-base-reporter.js']],
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 60000,

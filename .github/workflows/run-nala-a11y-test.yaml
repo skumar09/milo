@@ -1,4 +1,4 @@
-name: Nala Accessibility Tests
+name: Run Nala Accessibility Tests
 
 on:
   push:
@@ -25,13 +25,19 @@ jobs:
 
       - name: Prepare URLs
         run: |
-          # For push events, we use a default URL
           echo "Triggered by a push event. Using default URL."
           echo "INPUT_URLS=https://www.adobe.com/acrobat/personal-document-management.html" >> $GITHUB_ENV
 
       - name: Debug URLs
         run: |
           echo "Final URLs: ${{ env.INPUT_URLS }}"
+
+      - name: Create report directory and store in environment variable
+        run: |
+          REPORT_DIR=$(pwd)/nala-reports
+          mkdir -p "$REPORT_DIR"
+          echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
+          echo "Created report directory at $REPORT_DIR"
 
       - name: Set execute permission for a11y.run.sh
         run: chmod +x ./nala/utils/a11y.run.sh
@@ -40,34 +46,19 @@ jobs:
         run: ./nala/utils/a11y.run.sh
         continue-on-error: true
 
-      - name: Checkout nala-a11y-results branch in your fork
-        uses: actions/checkout@v4
-        with:
-          repository: skumar09/milo
-          ref: nala-a11y-results
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check if report directory exists and list contents
-        run: |
-          echo "current working directory: $(pwd)"
-          if [ -d "nala-report-a11y/manual-reports" ]; then
-            echo "Report directory exist."
-            ls -la nala-report-a11y/manual-reports
-          else
-            ls -la nala-report-a11y
-            ls -la milo
-            echo "Report directory does NOT exist"
-          fi
-
       - name: Copy the generated accessibility report
         run: |
           mkdir -p reports
-          cp -r nala-report-a11y/manual-reports/* reports/
+          cp -r "$REPORT_DIR"/* reports/
 
-      - name: Commit and push the accessibility report to nala-a11y-results branch
+      - name: Upload the report to GitHub Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: nala-accessibility-test-report
+          path: reports/*
+          retention-days: 1
+
+      - name: Display artifact URL
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add reports/
-          git commit -m "Update accessibility report [skip ci]"
-          git push origin nala-a11y-results
+          echo "View and download the accessibility report artifact here:"
+          echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifact"
