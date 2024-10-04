@@ -3,14 +3,17 @@ import { runAccessibilityTest } from '../../libs/accessibility.js';
 
 const miloLibs = process.env.MILO_LIBS || '';
 const inputUrls = process.env.INPUT_URLS || '';
+const testScope = process.env.TEST_SCOPE || 'body';
+const wcagTags = process.env.WCAG_TAGS ? process.env.WCAG_TAGS.split(',') : ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+const maxViolations = process.env.MAX_VIOLATIONS ? parseInt(process.env.MAX_VIOLATIONS, 10) : 0;
 
-// Convert the input URLs into an array,rim and filter out empty URLs
+// Convert the input URLs into an array, trim and filter out empty URLs
 const urls = inputUrls.split(/[\s,]+/).map((url) => url.trim()).filter((url) => url);
 
 test.describe('Nala Accessibility Test Suite', () => {
   // Check if URLs are provided
   if (urls.length === 0) {
-    test('No URLs @ provided', async () => {
+    test('No URLs provided', async () => {
       console.error('No valid URLs were provided for testing.');
       throw new Error('No valid URLs found');
     });
@@ -18,7 +21,7 @@ test.describe('Nala Accessibility Test Suite', () => {
 
   // Loop through the provided URLs and run accessibility tests
   urls.forEach((url, index) => {
-    test(`[Test ${index + 1}] Accessibility Test on @  ${url}`, async ({ page }) => {
+    test(`[Test ${index + 1}] Accessibility Test on ${url}`, async ({ page }) => {
       console.info(`[Test Page]: ${url}`);
 
       // Error handling for invalid URLs or navigation failures
@@ -34,7 +37,7 @@ test.describe('Nala Accessibility Test Suite', () => {
 
       // Run accessibility test with error handling
       await test.step('Step 2: Run accessibility test on the page', async () => {
-        await runAccessibilityTest(page);
+        await runAccessibilityTest(page, testScope, wcagTags, maxViolations);
       });
     });
   });

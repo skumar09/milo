@@ -42,17 +42,6 @@ export default async function generateA11yReport(report, outputDir) {
     ? 'CircleCI Env Run'
     : 'Local Run';
 
-  const cssPath = isGitHubAction
-    ? path.join('/home/runner/work/milo/milo/nala/utils/a11y.css')
-    : path.join(__dirname, '../utils/a11y.css');
-
-  const jsPath = isGitHubAction
-    ? path.join('/home/runner/work/milo/milo/nala/utils/a11y.js')
-    : path.join(__dirname, '../utils/a11y.js');
-
-  console.log('CSSPath : ', cssPath);
-  console.log('JSPath: ', jsPath);
-
   // Inline CSS for the report
   const inlineCSS = `
     <style>
@@ -62,18 +51,64 @@ export default async function generateA11yReport(report, outputDir) {
         background-color: #f9f9f9; 
         color: #333;
       }
-      h1, h2, h3 { 
-        color: #333; 
-      }
       h1 {
-        font-size: 2em;
-        text-align: left;
+        font-size: 2.5em;
+        text-align: center;
         margin-bottom: 20px;
+        color: #003366;
       }
-      h2, h3 {
-        font-size: 1.2em;
-        margin-bottom: 5px;
-        font-weight: 500;
+      .metadata-container {
+        background-color: #e6f2ff;
+        background: linear-gradient(135deg, #e6f2ff, #cce0ff);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        text-align: left;
+        font-size: 1em;
+        color: #333;
+      }
+      .metadata-container span {
+        display: inline-block;
+        width: 150px; /* Adjust this width as necessary */
+        font-weight: bold;
+        color: #003366;
+      }
+      .metadata-container p {
+        margin: 0;
+        padding: 5px 0;
+      }
+      .metadata-container p:hover {
+        background-color: #f1f8ff;
+        border-radius: 5px;
+      }
+      .icon {
+        margin-right: 10px;
+        color: #006699;
+      }        
+      .section-header {
+        background-color: #f0f0f0;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .section-header h2 {
+        margin: 0;
+        color: #006699;
+        font-size: 1.4em;
+      }
+      .section-header p {
+        font-size: 1em;
+        color: #333;
+        margin: 5px 0;
+      }
+      .violation-section {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
       }
       table { 
         width: 100%; 
@@ -91,8 +126,12 @@ export default async function generateA11yReport(report, outputDir) {
         font-size: 0.9em;
       }
       th { 
-        background-color: #f5f5f5; 
+        background-color: #003366;
+        color: white;
         font-weight: bold;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
       }
       .severity-critical { 
         color: red; 
@@ -113,6 +152,9 @@ export default async function generateA11yReport(report, outputDir) {
       .severity-moderate {
         color: #e6c600;
         font-weight: bold;
+        background-color: #fffbe6;
+        padding: 4px 8px;
+        border-radius: 4px;
         text-align: center;
       }
       .collapsible {
@@ -124,6 +166,7 @@ export default async function generateA11yReport(report, outputDir) {
         outline: none;
         font-size: 14px;
         margin-bottom: 5px;
+        color: #006699;
       }
       .collapsible.active, .collapsible:hover {
         background-color: #ddd;
@@ -143,6 +186,15 @@ export default async function generateA11yReport(report, outputDir) {
         word-break: break-all;
         font-size: 0.85em;
         background-color: #f9f9f9;
+        text-align: center;
+        vertical-align: top; /* Align the content to the top */
+      }
+      td.fixed-column button {
+        margin-top: 5px;
+      }
+      td.centered {
+        text-align: center; /* Center the "Fix" link */
+        vertical-align: middle; /* Vertically center the content */
       }
       .node-summary {
         font-size: 0.85em;
@@ -181,34 +233,39 @@ export default async function generateA11yReport(report, outputDir) {
   let htmlContent = `
   <html>
   <head>
-    <title>Nala Accessibility Report</title>
-    ${inlineCSS}  <!-- <link rel="stylesheet" href=""> -->
+    <title>Nala Accessibility Test Report</title>
+    ${inlineCSS}
   </head>
   <body>
-    <h1>Nala Accessibility Report</h1>
-    <h2>Total Violations: ${report.length}</h2>
-    <h3>Test Run: ${testRunType}</h3>`;
+    <h1>Nala Accessibility Test Report</h1>
+    
+    <div class="metadata-container">
+      <p><i class="icon">🖥️</i><span>Test Run:</span> Local Run</p>
+      <p><i class="icon">⚠️</i><span>Total Violations:</span> 3</p>
+      <p><i class="icon">⏱️</i><span>Run Time:</span> 10/4/2024, 3:58:31 PM</p>
+      <p><i class="icon">ℹ️</i><span>Info:</span> <strong>Nala leverages the @axe-core/playwright</strong> library for accessibility testing.</p>
+    </div>`;
 
+  // Test details section
   report.forEach((result, resultIndex) => {
     htmlContent += `
-      <div class="section-header">
-        <h3>#${resultIndex + 1}.</h3>
-        <h3>Test Name: ${result.testName || 'N/A'}</h3>
-        <h3>Test Page: <a href="${result.url}" target="_blank">${
-      result.url
-    }</a></h3>
-        <h3>Test Scope: ${result.testScope || 'N/A'}</h3>
-      </div>
+    <div class="section-header">
+      <h2>#${resultIndex + 1} Test Name: ${result.testName || 'N/A'}</h2>
+      <p><strong>Test Page:</strong> <a href="${result.url}" target="_blank">${result.url}</a></p>
+      <p><strong>Test Scope:</strong><code> ${result.testScope || 'N/A'}</code></p>
+    </div>
+
+    <div class="violation-section">
       <table>
         <thead>
           <tr>
-            <th style="width: 5%;">#</th>
-            <th style="width: 20%;">Violation</th>
-            <th style="width: 15%;">Axe Rule ID</th>
-            <th style="width: 10%;">Severity</th>
-            <th style="width: 10%;">WCAG Tags</th>
-            <th style="width: 30%;">Nodes Affected</th>
-            <th style="width: 10%;">Possible Fix</th>
+            <th>#</th>
+            <th>Violation</th>
+            <th>Axe Rule ID</th>
+            <th>Severity</th>
+            <th>WCAG Tags</th>
+            <th>Nodes Affected</th>
+            <th>Possible Fix</th>
           </tr>
         </thead>
         <tbody>`;
@@ -252,20 +309,22 @@ export default async function generateA11yReport(report, outputDir) {
                 ${nodesAffected}
               </div>
             </td>
-            <td>${possibleFix}</td>
+            <td class="centered">${possibleFix}</td>
           </tr>`;
       });
     }
 
     htmlContent += `
         </tbody>
-      </table>`;
+      </table>
+    </div>`;
   });
 
   htmlContent += `
-    ${inlineJS}  <!-- <script src=""></script>  -->
+    ${inlineJS}
   </body>
   </html>`;
+  
   // Write the HTML report to file
   try {
     await fs.writeFile(reportPath, htmlContent);

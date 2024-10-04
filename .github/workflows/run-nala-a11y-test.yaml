@@ -3,21 +3,26 @@ name: Run Nala Accessibility Tests
 on:
   workflow_dispatch:
     inputs:
+      run_name:
+        description: "Workflow name"
+        required: false
+        default: "Nala Accessibility Test Run for Milo" 
       input_url:
         description: "The URL to run accessibility tests on"
         required: false
         default: "https://www.adobe.com/acrobat/personal-document-management.html"
-      run_name:
-        description: "Workflow name"
+      test_scope:
+        description: "Entire Page or Section/block (ex: `accordion.container`)"
         required: false
-        default: "Nala Accessibility Test Run"
-      urls_file:
-        description: "upload a file containing URL's (one url per line)"
+        default: "body"
+      wcag_tags:
+        description: "WCAG tags for the accessibility tests (e.g., 'wcag2a', 'wcag2aa', 'wcag2aaa')"
         required: false
-        type: string
-  push:
-    branches:
-      - nala-a11y  # Only runs on push events to this branch
+        default: "wcag2a, wcag2aa, wcag21a, wcag21aa"
+      max_violations:
+        description: "Maximum allowed accessibility violations"
+        required: false
+        default: 0
 
 jobs:
   run-accessibility-tests:
@@ -26,6 +31,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,18 +43,20 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Prepare URLs
+      - name: Prepare environment variables
         run: |
-          INPUT_URL="${{ github.event.inputs.input_url }}"
-          if [ -z "$INPUT_URL" ]; then
-            INPUT_URL="https://milo.adobe.com/"
-          fi
-          echo "Using input url: ${{ github.event.inputs.input_url }}"
-          echo "INPUT_URLS=${{ github.event.inputs.input_url }}" >> $GITHUB_ENV
+          echo "INPUT_URL=${{ github.event.inputs.input_url }}" >> $GITHUB_ENV
+          echo "TEST_SCOPE=${{ github.event.inputs.test_scope }}" >> $GITHUB_ENV
+          echo "WCAG_TAGS=${{ github.event.inputs.wcag_tags }}" >> $GITHUB_ENV
+          echo "MAX_VIOLATIONS=${{ github.event.inputs.max_violations }}" >> $GITHUB_ENV
+          echo "MILO_LIBS=${{ secrets.MILO_LIBS }}" >> $GITHUB_ENV
 
-      - name: Debug URLs
+      - name: Debug Environment Variables
         run: |
-          echo "Final URLs: ${{ env.INPUT_URLS }}"
+          echo "URL: ${{ env.INPUT_URL }}"
+          echo "Test Scope: ${{ env.TEST_SCOPE }}"
+          echo "WCAG Tags: ${{ env.WCAG_TAGS }}"
+          echo "Max Violations: ${{ env.MAX_VIOLATIONS }}"
 
       - name: Create report directory and store in environment variable
         run: |
