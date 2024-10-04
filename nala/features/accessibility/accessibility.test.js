@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { runAccessibilityTest } from '../../libs/accessibility.js';
 
 const miloLibs = process.env.MILO_LIBS || '';
-const inputUrls = process.env.INPUT_URLS || '';
+const inputUrls = process.env.INPUT_URL || '';
 const testScope = process.env.TEST_SCOPE || 'body';
 const wcagTags = process.env.WCAG_TAGS ? process.env.WCAG_TAGS.split(',') : ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 const maxViolations = process.env.MAX_VIOLATIONS ? parseInt(process.env.MAX_VIOLATIONS, 10) : 0;
