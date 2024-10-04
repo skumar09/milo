@@ -7,6 +7,14 @@ on:
         description: "The URL to run accessibility tests on"
         required: false
         default: "https://www.adobe.com/acrobat/personal-document-management.html"
+      run_name:
+        description: "Workflow name"
+        required: false
+        default: "Nala Accessibility Test Run"
+      urls_file:
+        description: "upload a file containing URL's (one url per line)"
+        required: false
+        type: string
   push:
     branches:
       - nala-a11y  # Only runs on push events to this branch
