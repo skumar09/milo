@@ -1,6 +1,12 @@
 name: Run Nala Accessibility Tests
 
 on:
+  workflow_dispatch
+    inputs:
+      input_url:
+        description: "The URL to run accessibility tests on"
+        required: false
+        default: "https://www.adobe.com/acrobat/personal-document-management.html"
   push:
     branches:
       - nala-a11y  # Only runs on push events to this branch
@@ -25,8 +31,8 @@ jobs:
 
       - name: Prepare URLs
         run: |
-          echo "Triggered by a push event. Using default URL."
-          echo "INPUT_URLS=https://www.adobe.com/acrobat/personal-document-management.html" >> $GITHUB_ENV
+          echo "Using input url: ${{ github.event.input.input_url }}"
+          echo "INPUT_URLS=${{ github.event.input.input_url }}" >> $GITHUB_ENV
 
       - name: Debug URLs
         run: |
