@@ -31,12 +31,12 @@ jobs:
 
       - name: Prepare URLs
         run: |
-          INPUT_URL="${{ github.event.input.input_url }}"
+          INPUT_URL="${{ github.event.inputs.input_url }}"
           if [ -z "$INPUT_URL" ]; then
             INPUT_URL="https://milo.adobe.com/"
           fi
-          echo "Using input url: ${{ github.event.input.input_url }}"
-          echo "INPUT_URLS=${{ github.event.input.input_url }}" >> $GITHUB_ENV
+          echo "Using input url: ${{ github.event.inputs.input_url }}"
+          echo "INPUT_URLS=${{ github.event.inputs.input_url }}" >> $GITHUB_ENV
 
       - name: Debug URLs
         run: |
