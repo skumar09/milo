@@ -182,7 +182,7 @@ export default async function generateA11yReport(report, outputDir) {
   <html>
   <head>
     <title>Nala Accessibility Report</title>
-    <link rel="stylesheet" href="${inlineCSS}">  <!-- Link to external CSS -->
+    ${inlineCSS}  <!-- <link rel="stylesheet" href=""> -->
   </head>
   <body>
     <h1>Nala Accessibility Report</h1>
@@ -263,7 +263,7 @@ export default async function generateA11yReport(report, outputDir) {
   });
 
   htmlContent += `
-    <script src="${inlineJS}"></script>  <!-- Link to renamed external JS -->
+    ${inlineJS}  <!-- <script src=""></script>  -->
   </body>
   </html>`;
   // Write the HTML report to file
