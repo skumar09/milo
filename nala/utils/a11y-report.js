@@ -42,20 +42,23 @@ export default async function generateA11yReport(report, outputDir) {
   : 'Local Run';
 
 
-  const currentWorkingDir = process.cwd();
-  const relativeCSSPath = path.join(currentWorkingDir, '/nala/utils/a11y.css');
-  const relativeJSPath = path.join(currentWorkingDir, '/nala/utils/a11y.js');
+  const cssPath = isGitHubAction
+  ? path.join('/home/runner/work/milo/milo/nala/utils/a11y.css')
+  : path.join(__dirname, '../utils/a11y.css');
 
-  console.log('current working directory : ', currentWorkingDir);
-  console.log('relativeCSSPath : ', relativeCSSPath);
-  console.log('relativeJSPath: ', relativeJSPath);
+  const jsPath = isGitHubAction
+    ? path.join('/home/runner/work/milo/milo/nala/utils/a11y.js')
+    : path.join(__dirname, '../utils/a11y.js');
+
+  console.log('CSSPath : ', cssPath);
+  console.log('JSPath: ', jsPath);
 
 
   let htmlContent = `
   <html>
   <head>
     <title>Nala Accessibility Report</title>
-    <link rel="stylesheet" href="${relativeCSSPath}">  <!-- Link to external CSS -->
+    <link rel="stylesheet" href="${cssPath}">  <!-- Link to external CSS -->
   </head>
   <body>
     <h1>Nala Accessibility Report</h1>
@@ -127,7 +130,7 @@ export default async function generateA11yReport(report, outputDir) {
   });
 
   htmlContent += `
-    <script src="${relativeJSPath}"></script>  <!-- Link to renamed external JS -->
+    <script src="${jsPath}"></script>  <!-- Link to renamed external JS -->
   </body>
   </html>`;
   // Write the HTML report to file
