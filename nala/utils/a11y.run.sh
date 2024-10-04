@@ -1,7 +1,7 @@
 #!/bin/bash
 
 EXIT_STATUS=0
-URLS="${INPUT_URLS:-}"
+URLS="${INPUT_URL:-}"
 
 # Retrieve the user who triggered the workflow
 TRIGGERED_BY="${TRIGGERED_BY:-unknown}"
