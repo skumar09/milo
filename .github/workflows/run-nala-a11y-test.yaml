@@ -1,7 +1,7 @@
 name: Run Nala Accessibility Tests
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
     inputs:
       input_url:
         description: "The URL to run accessibility tests on"
