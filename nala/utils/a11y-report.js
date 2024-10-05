@@ -43,6 +43,11 @@ export default async function generateA11yReport(report, outputDir) {
   const triggeredBy = isGitHubAction
     ? process.env.GITHUB_ACTOR || 'unknown'
     : 'Nala QE';
+  
+  const totalViolations = report.reduce(
+    (sum, result) => sum + (result.violations ? result.violations.length : 0),
+    0
+  );
 
   // Inline CSS for the report
   const inlineCSS = `
@@ -244,7 +249,7 @@ export default async function generateA11yReport(report, outputDir) {
     <div class="metadata-container">
       <p><i class="icon">🖥️</i><span>Test Run:</span> ${testRunType}</p>
       <p>${isGitHubAction ? `<i class="icon">👤</i><span>Triggered By:</span> ${triggeredBy}` : `<i class="icon">👤</i><span>Triggered By:</span> Nala QE`}</p>
-      <p><i class="icon">⚠️</i><span>Total Violations:</span>${report.length}</p>
+      <p><i class="icon">⚠️</i><span>Total Violations:</span>${totalViolations}</p>
       <p><i class="icon">⏱️</i><span>Run Time:</span> ${time}</p>
       <p><i class="icon">ℹ️</i><span>Info:</span> <strong>Nala leverages the @axe-core/playwright</strong> library for accessibility testing.</p>
     </div>`;
