@@ -23,8 +23,11 @@ async function runAccessibilityTest(page, testScope = 'body', includeTags = ['wc
 
     let violationsDetails = '';
 
-    // Handle a case where testScope is a locator from POM
-    if (typeof testScope === 'object' && testScope.constructor.name === 'Locator') {
+    // Handle a case where testScope is a string or locator from POM
+    if (typeof testScope === 'string') {
+      scopeDescription = testScope === 'body' ? 'the entire page' : `section: ${testScope}`;
+      testElement = page.locator(testScope);
+    } else if (typeof testScope === 'object' && testScope.constructor.name === 'Locator') {
       const eleHandle = await testScope.elementHandle();
       if (!eleHandle) {
         throw new AccessibilityError('Element not found for the given locator');
