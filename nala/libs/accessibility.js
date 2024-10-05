@@ -67,7 +67,6 @@ async function runAccessibilityTest(page, testScope = 'body', includeTags = ['wc
 
       enhancedAxeResults.violations.forEach((violation, index) => {
         violationsDetails += `[Result       ]: Accessibility test found ${violationCount} accessibility violation(s) for ${testName}\n`;
-        violationsDetails += `[Test Name    ]: ${testName}\n`;
         violationsDetails += '[Violation Details]:\n';
         violationsDetails += `\n${index + 1}. Violation: ${violation.description}\n`;
         violationsDetails += `   - Axe Rule ID: ${violation.id}\n`;

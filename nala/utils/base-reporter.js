@@ -95,14 +95,7 @@ class BaseReporter {
     const resultSummary = { summary };
 
     const resultPath = this.getA11yResultPath();
-    console.log('onEnd / Result Path', resultPath);
-
     const fullResultPath = path.resolve(resultPath);
-
-    console.log('onEnd / Result Path', resultPath);
-    console.log('Current working directory:', process.cwd());
-    console.log('Full result path:', path.resolve(resultPath));  // Ensure the path is fully resolved
-
 
     try {
       const dirExists = await fs.stat(fullResultPath)
@@ -120,9 +113,6 @@ class BaseReporter {
       console.error('Error creating or checking directory:', error.message);
       return;
     }
-
-    console.log('onEnd / existsSync');
-
     if (this.globalAccessibilityResults.length > 0) {
       console.log(`Found total ${this.globalAccessibilityResults.length} Accessibility rules voilation in this test run`);
       await generateA11yReport(this.globalAccessibilityResults, resultPath);
@@ -282,10 +272,8 @@ class BaseReporter {
       if (isPullRequest) {
         return './nala-report-a11y/pr-reports';
       }
-      console.log('Manual the result path:./nala-report-a11y/manual-reports');
       return './nala-report-a11y/manual-reports';
     }
-    // local run
     return './test-results';
   }
 }

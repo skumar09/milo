@@ -28,10 +28,6 @@ export default async function generateA11yReport(report, outputDir) {
     ? path.resolve(process.env.REPORT_DIR, reportName) // Use GitHub report directory
     : path.resolve(outputDir, reportName);
 
-  console.log('Nala A11Y ReportPath: ', reportPath);
-  console.log('GITHUB_ACTIONS:', process.env.GITHUB_ACTIONS);
-  console.log('GITHUB_ACTIOR:', process.env.GITHUB_ACTIOR);
-
   // Check if the report contains violations
   if (!report || report.length === 0) {
     console.error('No accessibility violations to report.');
@@ -46,7 +42,7 @@ export default async function generateA11yReport(report, outputDir) {
 
   const triggeredBy = isGitHubAction
     ? process.env.GITHUB_ACTOR || 'unknown'
-    : 'Local User';
+    : 'Nala QE';
 
   // Inline CSS for the report
   const inlineCSS = `
@@ -246,7 +242,8 @@ export default async function generateA11yReport(report, outputDir) {
     <h1>Nala Accessibility Test Report</h1>
     
     <div class="metadata-container">
-      <p><i class="icon">🖥️</i><span>Test Run:</span> ${testRunType}${isGitHubAction ? ` | <i class="icon">👤</i><span>Triggered By:</span> ${triggeredBy}` : ''}</p>
+      <p><i class="icon">🖥️</i><span>Test Run:</span> ${testRunType}</p>
+      <p>${isGitHubAction ? `<i class="icon">👤</i><span>Triggered By:</span> ${triggeredBy}` : `<i class="icon">👤</i><span>Triggered By:</span> Nala QE`}</p>
       <p><i class="icon">⚠️</i><span>Total Violations:</span>${report.length}</p>
       <p><i class="icon">⏱️</i><span>Run Time:</span> ${time}</p>
       <p><i class="icon">ℹ️</i><span>Info:</span> <strong>Nala leverages the @axe-core/playwright</strong> library for accessibility testing.</p>
