@@ -52,7 +52,6 @@ class BaseReporter {
       const attachment = attachments[0];
       const attachedData = JSON.parse(attachment.body.toString('utf-8'));
       this.globalAccessibilityResults.push(attachedData);
-
     }
 
     if (retry < retries && status === 'failed') {

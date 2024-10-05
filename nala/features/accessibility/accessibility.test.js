@@ -7,12 +7,6 @@ const testScope = process.env.TEST_SCOPE || 'body';
 const wcagTags = process.env.WCAG_TAGS ? process.env.WCAG_TAGS.split(',') : ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 const maxViolations = process.env.MAX_VIOLATIONS ? parseInt(process.env.MAX_VIOLATIONS, 10) : 0;
 
-console.log(`Input URL: ${inputUrls}`);
-console.log(`TestScope: ${testScope}`);
-console.log(`WCAG Tags: ${wcagTags}`);
-console.log(`Max Viola: ${maxViolations}`);
-
-
 // Convert the input URLs into an array, trim and filter out empty URLs
 const urls = inputUrls.split(/[\s,]+/).map((url) => url.trim()).filter((url) => url);
 
