@@ -35,7 +35,7 @@ export default async function generateA11yReport(report, outputDir) {
   }
 
   const testRunType = isGitHubAction
-    ? 'GitHub Env Run'
+    ? 'GitHub Action Run'
     : process.env.CIRCLECI
     ? 'CircleCI Env Run'
     : 'Local Run';

@@ -27,7 +27,6 @@ const config = {
   /* Reporter to use. */
   reporter: process.env.CI
     ? [
-        ['html', { outputFolder: 'nala-reports' }],
         ['list'],
         ['../utils/a11y-base-reporter.js'],
       ]
