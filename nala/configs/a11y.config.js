@@ -32,7 +32,6 @@ const config = {
         ['../utils/a11y-base-reporter.js'],
       ]
     : [
-        ['html', { outputFolder: 'test-html-results' }],
         ['list'],
         ['../utils/a11y-base-reporter.js'],
       ],
@@ -55,10 +54,6 @@ const config = {
           'sec-ch-ua': '"Chromium"',
         },
       },
-    },
-    {
-      name: 'milo-live-firefox',
-      use: { ...devices['Desktop Firefox'] },
     },
   ],
 };

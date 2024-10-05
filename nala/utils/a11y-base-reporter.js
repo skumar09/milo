@@ -46,14 +46,13 @@ class BaseReporter {
       retry,
     } = result;
 
-    // check for accessibility results violations and add them to 
-    // globalAccessibilityResult array
     const attachments = result.attachments.filter((att) => att.name === 'Accessibility Test Results');
     
     if (attachments.length > 0) {
       const attachment = attachments[0];
       const attachedData = JSON.parse(attachment.body.toString('utf-8'));
       this.globalAccessibilityResults.push(attachedData);
+
     }
 
     if (retry < retries && status === 'failed') {
