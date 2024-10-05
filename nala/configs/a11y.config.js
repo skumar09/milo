@@ -27,13 +27,13 @@ const config = {
   /* Reporter to use. */
   reporter: process.env.CI
     ? [
-        ['list'],
-        ['../utils/a11y-base-reporter.js'],
-      ]
+      ['list'],
+      ['../utils/a11y-base-reporter.js'],
+    ]
     : [
-        ['list'],
-        ['../utils/a11y-base-reporter.js'],
-      ],
+      ['list'],
+      ['../utils/a11y-base-reporter.js'],
+    ],
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 60000,
@@ -49,9 +49,7 @@ const config = {
       name: 'milo-live-chromium',
       use: {
         ...devices['Desktop Chrome'],
-        extraHTTPHeaders: {
-          'sec-ch-ua': '"Chromium"',
-        },
+        extraHTTPHeaders: { 'sec-ch-ua': '"Chromium"' },
       },
     },
   ],

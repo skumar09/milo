@@ -37,16 +37,16 @@ export default async function generateA11yReport(report, outputDir) {
   const testRunType = isGitHubAction
     ? 'GitHub Action Run'
     : process.env.CIRCLECI
-    ? 'CircleCI Env Run'
-    : 'Local Run';
+      ? 'CircleCI Env Run'
+      : 'Local Run';
 
   const triggeredBy = isGitHubAction
     ? process.env.GITHUB_ACTOR || 'unknown'
     : 'Nala QE';
-  
+
   const totalViolations = report.reduce(
     (sum, result) => sum + (result.violations ? result.violations.length : 0),
-    0
+    0,
   );
 
   // Inline CSS for the report
@@ -248,7 +248,7 @@ export default async function generateA11yReport(report, outputDir) {
     
     <div class="metadata-container">
       <p><i class="icon">🖥️</i><span>Test Run:</span> ${testRunType}</p>
-      <p>${isGitHubAction ? `<i class="icon">👤</i><span>Triggered By:</span> ${triggeredBy}` : `<i class="icon">👤</i><span>Triggered By:</span> Nala QE`}</p>
+      <p>${isGitHubAction ? `<i class="icon">👤</i><span>Triggered By:</span> ${triggeredBy}` : '<i class="icon">👤</i><span>Triggered By:</span> Nala QE'}</p>
       <p><i class="icon">⚠️</i><span>Total Violations:</span>${totalViolations}</p>
       <p><i class="icon">⏱️</i><span>Run Time:</span> ${time}</p>
       <p><i class="icon">ℹ️</i><span>Info:</span> <strong>Nala leverages the @axe-core/playwright</strong> library for accessibility testing.</p>
@@ -288,17 +288,16 @@ export default async function generateA11yReport(report, outputDir) {
           ? violation.tags.join(', ')
           : 'N/A';
 
-        const nodesAffected =
-          violation.nodes && violation.nodes.length > 0
-            ? violation.nodes
-                .map(
-                  (node, nodeIndex) => `
+        const nodesAffected = violation.nodes && violation.nodes.length > 0
+          ? violation.nodes
+            .map(
+              (node, nodeIndex) => `
             <p class="node-summary">${nodeIndex + 1}. Affected Node:
               <pre><code>${escapeHTML(node.html || 'N/A')}</code></pre>
-            </p>`
-                )
-                .join('')
-            : 'No nodes affected';
+            </p>`,
+            )
+            .join('')
+          : 'No nodes affected';
 
         const possibleFix = violation.helpUrl
           ? `<a href="${violation.helpUrl}" target="_blank">Fix</a>`
@@ -332,7 +331,7 @@ export default async function generateA11yReport(report, outputDir) {
     ${inlineJS}
   </body>
   </html>`;
-  
+
   // Write the HTML report to file
   try {
     await fs.writeFile(reportPath, htmlContent);

@@ -1,9 +1,6 @@
 /* eslint-disable max-len, class-methods-use-this, no-empty-function, no-console */
 import generateA11yReport from './a11y-report.js';
 
-const fs = require('fs').promises;
-const path = require('path');
-
 const { sendSlackMessage } = require('./slack.js');
 
 // Playwright will include ANSI color characters and regex from below
@@ -38,7 +35,7 @@ class BaseReporter {
   }
 
   async onTestEnd(test, result) {
-    const { title, retries, _projectId } = test;
+    const { title, retries } = test;
     const {
       status,
       duration,
@@ -47,7 +44,7 @@ class BaseReporter {
     } = result;
 
     const attachments = result.attachments.filter((att) => att.name === 'Accessibility Test Results');
-    
+
     if (attachments.length > 0) {
       const attachment = attachments[0];
       const attachedData = JSON.parse(attachment.body.toString('utf-8'));
@@ -82,7 +79,7 @@ class BaseReporter {
     const summary = this.printResultSummary();
     const resultSummary = { summary };
 
-    const resultPath = './test-results'
+    const resultPath = './test-results';
 
     if (this.globalAccessibilityResults.length > 0) {
       console.log(`Found total ${this.globalAccessibilityResults.length} Accessibility rules voilation for the run`);
@@ -154,7 +151,6 @@ class BaseReporter {
     }
     return summary;
   }
-
 }
 
 export default BaseReporter;
