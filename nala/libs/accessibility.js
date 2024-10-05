@@ -30,7 +30,6 @@ async function runAccessibilityTest(page, testScope = 'body', includeTags = ['wc
         testElement = 'body'
       } else {
         scopeDescription = `section: ${testScope}`;
-        testElement = page.locator(`${testScope}`);
       }
     } else if (typeof testScope === 'object' && testScope.constructor.name === 'Locator') {
       const eleHandle = await testScope.elementHandle();
