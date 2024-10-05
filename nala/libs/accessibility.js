@@ -21,6 +21,7 @@ async function runAccessibilityTest(page, testScope = 'body', includeTags = ['wc
     let scopeDescription = 'entire page';
     let testElement = testScope;
 
+    console.log('Input test ',testScope);
     let violationsDetails = '';
 
     // Handle a case where testScope is a string or locator from POM
@@ -38,6 +39,7 @@ async function runAccessibilityTest(page, testScope = 'body', includeTags = ['wc
       scopeDescription = testScope === 'body' ? 'the entire page' : `section: ${testScope}`;
     }
 
+    console.log('Scope description:', scopeDescription);
     // Run the Axe accessibility test on the given scope and tags
     const axe = await new AxeBuilder({ page })
       .withTags(includeTags)
