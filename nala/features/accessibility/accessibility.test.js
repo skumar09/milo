@@ -8,9 +8,9 @@ const wcagTags = process.env.WCAG_TAGS ? process.env.WCAG_TAGS.split(',') : ['wc
 const maxViolations = process.env.MAX_VIOLATIONS ? parseInt(process.env.MAX_VIOLATIONS, 10) : 0;
 
 console.log(`Input URL: ${inputUrls}`);
-console.log(`Input URL: ${testScope}`);
-console.log(`Input URL: ${wcagTags}`);
-console.log(`Input URL: ${maxViolations}`);
+console.log(`TestScope: ${testScope}`);
+console.log(`WCAG Tags: ${wcagTags}`);
+console.log(`Max Viola: ${maxViolations}`);
 
 
 // Convert the input URLs into an array, trim and filter out empty URLs

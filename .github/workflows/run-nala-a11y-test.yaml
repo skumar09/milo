@@ -12,7 +12,7 @@ on:
         required: false
         default: "https://www.adobe.com/acrobat/personal-document-management.html"
       test_scope:
-        description: "Entire Page or Section/block (ex: `accordion.container`)"
+        description: "Entire Page or Section/block (ex: .accordion.container OR .section)"
         required: false
         default: "body"
       wcag_tags:
