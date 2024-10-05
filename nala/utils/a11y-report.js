@@ -42,6 +42,10 @@ export default async function generateA11yReport(report, outputDir) {
     ? 'CircleCI Env Run'
     : 'Local Run';
 
+  const triggeredBy = isGitHubAction
+    ? process.env.GITHUB_ACTOR || 'unknown'
+    : 'Local User';
+
   // Inline CSS for the report
   const inlineCSS = `
     <style>
@@ -240,9 +244,9 @@ export default async function generateA11yReport(report, outputDir) {
     <h1>Nala Accessibility Test Report</h1>
     
     <div class="metadata-container">
-      <p><i class="icon">🖥️</i><span>Test Run:</span> Local Run</p>
-      <p><i class="icon">⚠️</i><span>Total Violations:</span> 3</p>
-      <p><i class="icon">⏱️</i><span>Run Time:</span> 10/4/2024, 3:58:31 PM</p>
+      <p><i class="icon">🖥️</i><span>Test Run:</span> ${testRunType}${isGitHubAction ? ` | <i class="icon">👤</i><span>Triggered By:</span> ${triggeredBy}` : ''}</p>
+      <p><i class="icon">⚠️</i><span>Total Violations:</span>${report.length}</p>
+      <p><i class="icon">⏱️</i><span>Run Time:</span> ${time}</p>
       <p><i class="icon">ℹ️</i><span>Info:</span> <strong>Nala leverages the @axe-core/playwright</strong> library for accessibility testing.</p>
     </div>`;
 
