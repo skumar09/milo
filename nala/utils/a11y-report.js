@@ -29,6 +29,8 @@ export default async function generateA11yReport(report, outputDir) {
     : path.resolve(outputDir, reportName);
 
   console.log('Nala A11Y ReportPath: ', reportPath);
+  console.log('GITHUB_ACTIONS:', process.env.GITHUB_ACTIONS);
+  console.log('GITHUB_ACTIOR:', process.env.GITHUB_ACTIOR);
 
   // Check if the report contains violations
   if (!report || report.length === 0) {
