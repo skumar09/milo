@@ -21,7 +21,6 @@ async function runAccessibilityTest(page, testScope = 'body', includeTags = ['wc
     let scopeDescription = 'entire page';
     let testElement = testScope;
 
-    console.log('Input test ',testScope);
     let violationsDetails = '';
 
     // Handle a case where testScope is a string or locator from POM
