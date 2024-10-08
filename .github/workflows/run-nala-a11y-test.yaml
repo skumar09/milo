@@ -80,7 +80,7 @@ jobs:
       - name: Get the generated report name
         id: get-report-name
         run: |
-          report_name=$(ls "$REPORT_DIR" | grep 'nala-a11y-report-*.html')
+          report_name=$(ls "$REPORT_DIR"/nala-a11y-report-*.html)
           echo "REPORT_NAME=$report_name" >> $GITHUB_ENV
           echo "::set-output name=report_name::$report_name"          
 
