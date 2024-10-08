@@ -77,6 +77,13 @@ jobs:
           mkdir -p reports
           cp -r "$REPORT_DIR"/* reports/
 
+      - name: Get the generated report name
+        id: get-report-name
+        run: |
+          report_name=$(ls "$REPORT_DIR" | grep 'nala-a11y-report-*.html')
+          echo "REPORT_NAME=$report_name" >> $GITHUB_ENV
+          echo "::set-output name=report_name::$report_name"          
+
       - name: Upload the report to GitHub Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -88,3 +95,15 @@ jobs:
         run: |
           echo "View and download the accessibility report artifact here:"
           echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifact"
+      
+      - name: Send HTML report to Slack via Nala-Result
+        run: |
+          curl -F file=@reports/${{ env.REPORT_NAME }} \
+               -F channels=C04KNA6KAAV
+               -F token=$SLACK_BOT_TOKEN \
+               -F title="Nala Accessibility Test Report" \
+               -F initial_comment="Here is the latest Nala Accessibility Test Report in HTML format" \
+               https://slack.com/api/files.upload
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.NALA_SLACK_OAUTH_TOKEN}}
+

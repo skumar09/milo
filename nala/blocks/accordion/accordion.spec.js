@@ -11,7 +11,7 @@ module.exports = {
         heading1: 'What size PDFs can I compress?',
         heading2: 'How do I check my PDF file size?',
       },
-      tags: '@accordion @a11 @smoke @regression @milo',
+      tags: '@accordion @smoke @regression @milo',
     },
     {
       tcid: '1',
@@ -23,7 +23,7 @@ module.exports = {
         heading1: 'What size PDFs can I compress?',
         heading2: 'How do I check my PDF file size?',
       },
-      tags: '@accordion @a11 @accordion-seo @smoke @regression @milo',
+      tags: '@accordion @accordion-seo @smoke @regression @milo',
     },
     {
       tcid: '2',
@@ -35,7 +35,7 @@ module.exports = {
         heading1: 'What size PDFs can I compress?',
         heading2: 'How do I check my PDF file size?',
       },
-      tags: '@accordion @a11 @accordion-quiet-max @smoke @regression @milo',
+      tags: '@accordion @accordion-quiet-max @smoke @regression @milo',
     },
     {
       tcid: '3',
@@ -49,7 +49,7 @@ module.exports = {
         outlineButtonText: 'Lorem ipsum',
         blueButtonText: 'Learn more',
       },
-      tags: '@accordion @a11y @smoke @regression @milo',
+      tags: '@accordion @a11y-section @smoke @regression @milo',
     },
     {
       tcid: '4',
@@ -61,18 +61,15 @@ module.exports = {
         heading1: 'What size PDFs can I compress?',
         heading2: 'How do I check my PDF file size?',
       },
-      tags: '@accordion @smoke @a11 @regression @milo',
+      tags: '@accordion @smoke @regression @milo',
     },
     {
       tcid: '5',
-      name: '@A12y Test on a page',
+      name: '@Test on a page',
       path: [
         'https://www.adobe.com/acrobat/personal-document-management.html',
-        'https://www.adobe.com/acrobat/resources.html',
-        'https://www.adobe.com/acrobat/free-trial-download.html',
       ],
-      tags: '@a11',
+      tags: '@a11y',
     },
-
   ],
 };
