@@ -99,7 +99,7 @@ jobs:
       - name: Send HTML report to Slack via Nala-Result
         run: |
           curl -F file=@${{ env.REPORT_NAME }} \
-               -F channels=C04KNA6KAAV
+               -F channels=C04KNA6KAAV \
                -F token=$SLACK_BOT_TOKEN \
                -F title="Nala Accessibility Test Report" \
                -F initial_comment="Here is the latest Nala Accessibility Test Report in HTML format" \
